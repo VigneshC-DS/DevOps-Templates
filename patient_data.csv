@@ -1,0 +1,101 @@
+patient_id,patient_name,age,gender,diagnosis,current_medication,lab_test,lab_value,lab_unit,last_visit_date,next_scheduled_visit,days_since_last_visit,missed_last_appointment,vitals_bp_systolic,vitals_bp_diastolic,vitals_heart_rate,vitals_spo2,notes
+P0001,Aarav Sharma,68,Male,Type 2 Diabetes,Metformin 500mg,HbA1c,9.9,%,2024-04-24,2024-06-08,251,No,174,70,95,96,Patient reports good medication adherence.
+P0002,Priya Patel,29,Male,Heart Failure,Furosemide 40mg,BNP,317.6,pg/mL,2024-01-14,2024-02-28,352,No,174,91,72,97,Patient reports no new symptoms.
+P0003,Rohan Mehta,45,Male,"Type 2 Diabetes, CKD","Insulin Glargine 10U, Losartan 50mg",HbA1c,11.4,%,2024-08-04,2024-10-03,149,No,132,86,64,91,Medication dose adjusted this visit.
+P0004,Anjali Singh,34,Female,"COPD, Heart Failure","Tiotropium 18mcg, Furosemide 40mg",FEV1%,33.8,%,2024-01-23,2024-04-22,343,No,153,70,93,94,Patient reports no new symptoms.
+P0005,Vikram Nair,51,Male,"Hypertension, Heart Failure","Amlodipine 5mg, Furosemide 40mg",BP Systolic,124.9,mmHg,2024-04-26,2024-06-25,249,No,134,71,82,94,Patient education provided on diet and lifestyle.
+P0006,Sunita Rao,68,Female,Chronic Kidney Disease,Losartan 50mg,eGFR,33.5,mL/min/1.73m²,2024-05-16,2024-06-15,229,No,126,99,104,93,Requires follow-up on lab results.
+P0007,Karan Gupta,57,Female,COPD,Tiotropium 18mcg,FEV1%,74.5,%,2024-10-12,2024-11-26,80,No,112,79,60,95,Medication dose adjusted this visit.
+P0008,Deepa Krishnan,45,Male,Heart Failure,Furosemide 40mg,BNP,1100.1,pg/mL,2024-06-10,2024-07-25,204,No,155,106,87,92,Patient reports dizziness and fatigue.
+P0009,Amit Joshi,36,Male,"Hypertension, Heart Failure","Amlodipine 5mg, Furosemide 40mg",BP Systolic,159.3,mmHg,2024-10-26,2025-01-24,66,No,156,88,72,92,Awaiting specialist report.
+P0010,Neha Iyer,59,Male,"Type 2 Diabetes, CKD","Insulin Glargine 10U, Losartan 50mg",HbA1c,7.3,%,2024-03-19,2024-05-03,287,No,159,103,62,96,Medication dose adjusted this visit.
+P0011,Suresh Kumar,66,Female,Osteoarthritis,Ibuprofen 400mg,Pain Score,3.8,/10,2024-01-06,2024-02-05,360,No,173,82,107,95,Patient missed doses in last week.
+P0012,Kavita Reddy,46,Female,Chronic Kidney Disease,Losartan 50mg,eGFR,37.7,mL/min/1.73m²,2024-05-14,2024-06-28,231,No,118,105,77,98,Patient reports no new symptoms.
+P0013,Rajesh Verma,40,Male,Asthma,Salbutamol 100mcg,Peak Flow,462.1,L/min,2024-09-28,2024-10-28,94,No,167,66,65,95,Patient reports dizziness and fatigue.
+P0014,Pooja Desai,43,Male,Heart Failure,Furosemide 40mg,BNP,1059.7,pg/mL,2024-02-13,2024-05-13,322,No,173,73,66,97,Awaiting specialist report.
+P0015,Arun Bose,38,Female,Osteoarthritis,Ibuprofen 400mg,Pain Score,8.1,/10,2024-04-18,2024-06-02,257,No,156,107,99,95,Patient education provided on diet and lifestyle.
+P0016,Meera Nambiar,61,Female,Hypertension,Amlodipine 5mg,BP Systolic,128.6,mmHg,2024-06-22,2024-07-22,192,No,134,102,72,90,Patient missed doses in last week.
+P0017,Sanjay Pillai,73,Male,Heart Failure,Furosemide 40mg,BNP,127.5,pg/mL,2024-06-18,2024-07-18,196,No,140,107,89,93,Awaiting specialist report.
+P0018,Lakshmi Menon,36,Female,Heart Failure,Furosemide 40mg,BNP,952.3,pg/mL,2024-07-27,2024-09-10,157,Yes,160,87,85,96,Patient education provided on diet and lifestyle.
+P0019,Ravi Choudhary,74,Male,"Type 2 Diabetes, Hypertension","Metformin 500mg, Amlodipine 5mg",HbA1c,9.9,%,2024-02-20,2024-03-21,315,No,148,71,73,93,Referred to specialist for further evaluation.
+P0020,Anita Patil,62,Female,Chronic Kidney Disease,Losartan 50mg,eGFR,36.1,mL/min/1.73m²,2024-08-24,2024-10-08,129,No,114,93,93,91,Patient reports good medication adherence.
+P0021,Mohammed Khan,69,Male,Hypertension,Amlodipine 5mg,BP Systolic,179.5,mmHg,2024-05-01,2024-06-15,244,No,166,78,83,90,Requires follow-up on lab results.
+P0022,Fatima Ansari,52,Male,Anemia,Ferrous Sulfate 200mg,Hemoglobin,8.4,g/dL,2024-08-20,2024-10-19,133,No,176,107,103,97,Requires follow-up on lab results.
+P0023,Arjun Tiwari,40,Female,Heart Failure,Furosemide 40mg,BNP,1164.0,pg/mL,2024-10-04,2024-11-03,88,No,112,68,95,97,Awaiting specialist report.
+P0024,Sneha Aggarwal,82,Male,Type 2 Diabetes,Metformin 500mg,HbA1c,11.3,%,2024-04-05,2024-05-05,270,No,135,90,65,99,Referred to specialist for further evaluation.
+P0025,Dinesh Bhatt,65,Male,Depression,Sertraline 50mg,PHQ-9 Score,6.8,/27,2024-10-25,2024-12-24,67,No,131,107,103,95,Referred to specialist for further evaluation.
+P0026,Rekha Saxena,44,Female,Chronic Kidney Disease,Losartan 50mg,eGFR,48.6,mL/min/1.73m²,2024-08-22,2024-10-21,131,No,114,65,87,99,Patient reports no new symptoms.
+P0027,Vivek Sinha,34,Male,Osteoarthritis,Ibuprofen 400mg,Pain Score,3.5,/10,2024-03-08,2024-05-07,298,No,136,88,76,92,Patient education provided on diet and lifestyle.
+P0028,Swati Pandey,81,Female,Depression,Sertraline 50mg,PHQ-9 Score,26.6,/27,2024-09-27,2024-10-27,95,No,175,84,100,91,Requires follow-up on lab results.
+P0029,Nikhil Malhotra,44,Male,"Hypertension, Anemia","Amlodipine 5mg, Ferrous Sulfate 200mg",BP Systolic,122.0,mmHg,2024-03-20,2024-05-19,286,No,131,110,79,93,Patient reports dizziness and fatigue.
+P0030,Usha Chauhan,60,Female,COPD,Tiotropium 18mcg,FEV1%,70.3,%,2024-01-27,2024-02-26,339,No,140,67,58,95,Requires follow-up on lab results.
+P0031,Harish Bajaj,68,Female,Chronic Kidney Disease,Losartan 50mg,eGFR,52.1,mL/min/1.73m²,2024-08-06,2024-09-05,147,Yes,124,99,60,95,Patient reports no new symptoms.
+P0032,Geeta Mishra,63,Male,Anemia,Ferrous Sulfate 200mg,Hemoglobin,7.4,g/dL,2024-07-05,2024-08-04,179,No,131,108,73,91,Lab values improving since last visit.
+P0033,Pradeep Yadav,77,Female,Depression,Sertraline 50mg,PHQ-9 Score,21.5,/27,2024-03-24,2024-05-08,282,No,108,76,105,95,Medication dose adjusted this visit.
+P0034,Kamla Dubey,79,Male,COPD,Tiotropium 18mcg,FEV1%,33.0,%,2024-02-25,2024-05-25,310,No,165,79,70,97,Lab values improving since last visit.
+P0035,Ashok Ghosh,47,Male,Heart Failure,Furosemide 40mg,BNP,77.2,pg/mL,2024-07-23,2024-09-21,161,No,113,82,80,98,Medication dose adjusted this visit.
+P0036,Vandana Srivastava,71,Female,Type 2 Diabetes,Metformin 500mg,HbA1c,6.2,%,2024-04-01,2024-05-31,274,Yes,181,92,80,95,Medication dose adjusted this visit.
+P0037,Manoj Tripathi,66,Male,Anemia,Ferrous Sulfate 200mg,Hemoglobin,12.8,g/dL,2024-05-10,2024-06-09,235,No,105,98,92,93,Lab values improving since last visit.
+P0038,Seema Kapoor,55,Male,"Type 2 Diabetes, Hypertension","Metformin 500mg, Amlodipine 5mg",HbA1c,11.5,%,2024-06-09,2024-07-09,205,No,143,97,77,96,Lab values improving since last visit.
+P0039,Ramesh Banerjee,53,Female,Osteoarthritis,Ibuprofen 400mg,Pain Score,2.9,/10,2024-07-13,2024-08-27,171,No,143,90,93,90,Patient reports dizziness and fatigue.
+P0040,Ananya Das,46,Male,Anemia,Ferrous Sulfate 200mg,Hemoglobin,12.0,g/dL,2024-06-13,2024-09-11,201,No,132,97,88,92,Patient missed doses in last week.
+P0041,Tarun Mukherjee,46,Female,Hypertension,Amlodipine 5mg,BP Systolic,171.4,mmHg,2024-04-30,2024-06-29,245,Yes,130,74,59,90,Referred to specialist for further evaluation.
+P0042,Pallavi Sen,58,Male,Hypothyroidism,Levothyroxine 50mcg,TSH,4.6,mIU/L,2024-10-21,2024-12-05,71,No,154,96,83,93,Requires follow-up on lab results.
+P0043,Gaurav Dey,69,Male,"Hypertension, Anemia","Amlodipine 5mg, Ferrous Sulfate 200mg",BP Systolic,163.8,mmHg,2024-02-24,2024-05-24,311,Yes,171,94,61,98,Referred to specialist for further evaluation.
+P0044,Manju Roy,82,Male,Hypothyroidism,Levothyroxine 50mcg,TSH,1.7,mIU/L,2024-09-28,2024-11-27,94,No,161,104,104,98,Medication dose adjusted this visit.
+P0045,Santosh Mandal,81,Female,"Hypertension, Anemia","Amlodipine 5mg, Ferrous Sulfate 200mg",BP Systolic,125.3,mmHg,2024-08-31,2024-11-29,122,No,136,105,75,98,Patient education provided on diet and lifestyle.
+P0046,Bharti Hazra,68,Male,COPD,Tiotropium 18mcg,FEV1%,47.0,%,2024-05-26,2024-07-10,219,No,145,99,63,92,Requires follow-up on lab results.
+P0047,Sunil Bhattacharya,42,Female,"Hypertension, Heart Failure","Amlodipine 5mg, Furosemide 40mg",BP Systolic,130.7,mmHg,2024-02-02,2024-05-02,333,No,174,94,84,90,Referred to specialist for further evaluation.
+P0048,Leela Chakraborty,81,Female,Anemia,Ferrous Sulfate 200mg,Hemoglobin,12.8,g/dL,2024-01-11,2024-04-10,355,No,150,84,106,96,Medication dose adjusted this visit.
+P0049,Binod Paul,62,Male,Hypothyroidism,Levothyroxine 50mcg,TSH,2.6,mIU/L,2024-09-05,2024-10-05,117,No,156,75,87,92,Patient reports no new symptoms.
+P0050,Chanda Biswas,62,Male,"Hypertension, Anemia","Amlodipine 5mg, Ferrous Sulfate 200mg",BP Systolic,140.6,mmHg,2024-01-14,2024-02-13,352,No,122,94,69,90,Patient reports dizziness and fatigue.
+P0051,Iqbal Hussain,52,Female,Heart Failure,Furosemide 40mg,BNP,572.9,pg/mL,2024-07-13,2024-09-11,171,No,158,81,63,97,Patient reports good medication adherence.
+P0052,Zara Sheikh,75,Male,Asthma,Salbutamol 100mcg,Peak Flow,263.0,L/min,2024-01-21,2024-02-20,345,No,130,66,97,92,Referred to specialist for further evaluation.
+P0053,Farhan Siddiqui,36,Female,"Type 2 Diabetes, Hypertension","Metformin 500mg, Amlodipine 5mg",HbA1c,6.7,%,2024-08-26,2024-10-25,127,No,126,103,96,91,Requires follow-up on lab results.
+P0054,Nadia Rahman,47,Male,Depression,Sertraline 50mg,PHQ-9 Score,5.6,/27,2024-10-21,2025-01-19,71,No,130,69,95,93,Patient missed doses in last week.
+P0055,Irfan Qureshi,72,Female,"COPD, Heart Failure","Tiotropium 18mcg, Furosemide 40mg",FEV1%,47.4,%,2024-03-02,2024-04-01,304,No,159,107,81,91,Awaiting specialist report.
+P0056,Salma Begum,69,Female,Type 2 Diabetes,Metformin 500mg,HbA1c,10.6,%,2024-09-07,2024-10-07,115,No,151,105,87,92,Medication dose adjusted this visit.
+P0057,Tariq Mirza,39,Female,Depression,Sertraline 50mg,PHQ-9 Score,22.8,/27,2024-09-04,2024-12-03,118,No,180,82,78,93,Patient missed doses in last week.
+P0058,Hina Akhtar,45,Female,Heart Failure,Furosemide 40mg,BNP,913.0,pg/mL,2024-07-13,2024-09-11,171,Yes,146,76,89,93,Lab values improving since last visit.
+P0059,Waseem Ali,79,Female,Asthma,Salbutamol 100mcg,Peak Flow,283.5,L/min,2024-05-21,2024-06-20,224,No,129,70,73,96,Patient education provided on diet and lifestyle.
+P0060,Reshma Shaikh,63,Male,"Hypertension, Heart Failure","Amlodipine 5mg, Furosemide 40mg",BP Systolic,153.3,mmHg,2024-09-08,2024-12-07,114,No,116,83,72,96,Referred to specialist for further evaluation.
+P0061,David Thomas,47,Female,Hypothyroidism,Levothyroxine 50mcg,TSH,6.0,mIU/L,2024-08-05,2024-10-04,148,No,163,82,77,94,Referred to specialist for further evaluation.
+P0062,Mary Joseph,35,Male,Asthma,Salbutamol 100mcg,Peak Flow,224.2,L/min,2024-04-04,2024-05-19,271,Yes,166,82,104,99,Awaiting specialist report.
+P0063,John Fernandez,66,Female,Hypertension,Amlodipine 5mg,BP Systolic,172.4,mmHg,2024-04-26,2024-06-25,249,Yes,106,110,92,92,Patient reports dizziness and fatigue.
+P0064,Susan D'Souza,30,Male,Osteoarthritis,Ibuprofen 400mg,Pain Score,4.0,/10,2024-09-08,2024-10-08,114,No,178,83,88,97,Patient education provided on diet and lifestyle.
+P0065,Peter Almeida,49,Male,Type 2 Diabetes,Metformin 500mg,HbA1c,7.0,%,2024-09-01,2024-10-01,121,No,156,96,62,99,Patient reports good medication adherence.
+P0066,Angela Pereira,37,Male,"Type 2 Diabetes, CKD","Insulin Glargine 10U, Losartan 50mg",HbA1c,10.1,%,2024-02-13,2024-03-29,322,Yes,158,103,96,99,Referred to specialist for further evaluation.
+P0067,Ronald Rodrigues,77,Female,Hypothyroidism,Levothyroxine 50mcg,TSH,9.6,mIU/L,2024-08-07,2024-10-06,146,No,112,104,105,91,Referred to specialist for further evaluation.
+P0068,Clara Gomes,68,Male,COPD,Tiotropium 18mcg,FEV1%,58.0,%,2024-05-02,2024-06-16,243,No,125,65,84,97,Patient reports no new symptoms.
+P0069,Victor Lobo,58,Female,Type 2 Diabetes,Metformin 500mg,HbA1c,6.9,%,2024-05-24,2024-08-22,221,Yes,134,81,108,99,Referred to specialist for further evaluation.
+P0070,Teresa Dias,55,Male,Osteoarthritis,Ibuprofen 400mg,Pain Score,3.6,/10,2024-05-16,2024-06-30,229,Yes,126,84,96,99,Patient reports dizziness and fatigue.
+P0071,Gurpreet Singh,56,Male,Hypothyroidism,Levothyroxine 50mcg,TSH,7.4,mIU/L,2024-07-25,2024-09-23,159,No,168,93,63,99,Patient reports good medication adherence.
+P0072,Harpreet Kaur,55,Female,Depression,Sertraline 50mg,PHQ-9 Score,10.5,/27,2024-04-27,2024-05-27,248,No,139,101,60,92,Patient education provided on diet and lifestyle.
+P0073,Mandeep Bains,61,Female,"Hypertension, Anemia","Amlodipine 5mg, Ferrous Sulfate 200mg",BP Systolic,133.1,mmHg,2024-08-11,2024-11-09,142,No,165,87,84,95,Lab values improving since last visit.
+P0074,Simran Dhaliwal,70,Male,"COPD, Heart Failure","Tiotropium 18mcg, Furosemide 40mg",FEV1%,26.4,%,2024-09-10,2024-11-09,112,No,156,100,60,97,Patient missed doses in last week.
+P0075,Jaswant Grewal,48,Female,Asthma,Salbutamol 100mcg,Peak Flow,222.9,L/min,2024-07-25,2024-08-24,159,No,174,94,84,90,Referred to specialist for further evaluation.
+P0076,Parmjit Hundal,61,Female,Depression,Sertraline 50mg,PHQ-9 Score,21.6,/27,2024-08-14,2024-09-13,139,Yes,175,73,76,97,Patient education provided on diet and lifestyle.
+P0077,Balwinder Sidhu,35,Male,"Type 2 Diabetes, Hypertension","Metformin 500mg, Amlodipine 5mg",HbA1c,9.7,%,2024-03-22,2024-05-21,284,No,175,91,63,93,Patient missed doses in last week.
+P0078,Navneet Cheema,57,Male,"Type 2 Diabetes, Hypertension","Metformin 500mg, Amlodipine 5mg",HbA1c,11.0,%,2024-05-29,2024-07-28,216,No,166,95,73,97,Awaiting specialist report.
+P0079,Daljeet Gill,37,Female,Heart Failure,Furosemide 40mg,BNP,1110.1,pg/mL,2024-03-10,2024-04-09,296,No,158,86,108,98,Patient reports dizziness and fatigue.
+P0080,Rupinder Sandhu,80,Male,COPD,Tiotropium 18mcg,FEV1%,61.3,%,2024-10-27,2025-01-25,65,No,162,99,88,95,Lab values improving since last visit.
+P0081,Nandini Rao,63,Female,Hypothyroidism,Levothyroxine 50mcg,TSH,9.8,mIU/L,2024-05-02,2024-07-31,243,Yes,157,67,78,97,Medication dose adjusted this visit.
+P0082,Chetan Hegde,52,Male,Hypothyroidism,Levothyroxine 50mcg,TSH,10.1,mIU/L,2024-09-14,2024-11-13,108,No,161,71,91,97,Patient reports good medication adherence.
+P0083,Bharath Shetty,74,Male,Anemia,Ferrous Sulfate 200mg,Hemoglobin,12.6,g/dL,2024-02-08,2024-05-08,327,No,138,86,97,96,Patient missed doses in last week.
+P0084,Divya Kamath,82,Female,"COPD, Heart Failure","Tiotropium 18mcg, Furosemide 40mg",FEV1%,47.0,%,2024-07-13,2024-09-11,171,No,167,99,60,99,Patient missed doses in last week.
+P0085,Prasad Naik,43,Female,Heart Failure,Furosemide 40mg,BNP,908.8,pg/mL,2024-02-20,2024-03-21,315,No,143,66,60,95,Patient reports good medication adherence.
+P0086,Shreya Kulkarni,46,Female,Asthma,Salbutamol 100mcg,Peak Flow,339.4,L/min,2024-09-28,2024-12-27,94,No,128,75,69,91,Patient reports no new symptoms.
+P0087,Akash Jain,52,Male,Hypothyroidism,Levothyroxine 50mcg,TSH,9.6,mIU/L,2024-04-28,2024-07-27,247,No,163,81,100,90,Patient education provided on diet and lifestyle.
+P0088,Poornima Deshpande,46,Male,Hypertension,Amlodipine 5mg,BP Systolic,143.1,mmHg,2024-10-27,2024-12-26,65,No,159,109,74,97,Patient reports dizziness and fatigue.
+P0089,Tejal Gokhale,40,Female,"COPD, Heart Failure","Tiotropium 18mcg, Furosemide 40mg",FEV1%,39.3,%,2024-07-14,2024-09-12,170,No,142,66,100,96,Patient reports dizziness and fatigue.
+P0090,Nitin Kale,28,Male,"Hypertension, Anemia","Amlodipine 5mg, Ferrous Sulfate 200mg",BP Systolic,154.4,mmHg,2024-05-26,2024-07-10,219,No,150,79,98,93,Patient reports no new symptoms.
+P0091,Laila Nathani,44,Male,"Type 2 Diabetes, Hypertension","Metformin 500mg, Amlodipine 5mg",HbA1c,6.6,%,2024-01-21,2024-03-21,345,No,109,102,81,92,Patient missed doses in last week.
+P0092,Cyrus Irani,46,Female,"Hypertension, Heart Failure","Amlodipine 5mg, Furosemide 40mg",BP Systolic,149.1,mmHg,2024-03-08,2024-05-07,298,No,139,75,74,97,Patient reports dizziness and fatigue.
+P0093,Shireen Mistry,75,Female,"Type 2 Diabetes, CKD","Insulin Glargine 10U, Losartan 50mg",HbA1c,7.6,%,2024-03-13,2024-04-27,293,No,155,100,81,91,Medication dose adjusted this visit.
+P0094,Firoze Contractor,28,Female,Osteoarthritis,Ibuprofen 400mg,Pain Score,2.9,/10,2024-05-14,2024-08-12,231,No,152,71,101,93,Patient education provided on diet and lifestyle.
+P0095,Meher Patel,29,Female,"Hypertension, Anemia","Amlodipine 5mg, Ferrous Sulfate 200mg",BP Systolic,154.7,mmHg,2024-02-02,2024-05-02,333,No,143,106,84,91,Requires follow-up on lab results.
+P0096,Sujata Acharyya,30,Male,COPD,Tiotropium 18mcg,FEV1%,74.8,%,2024-02-19,2024-04-04,316,No,122,89,87,95,Awaiting specialist report.
+P0097,Tapan Ghosh,54,Male,"Hypertension, Anemia","Amlodipine 5mg, Ferrous Sulfate 200mg",BP Systolic,142.0,mmHg,2024-09-07,2024-12-06,115,No,140,67,102,95,Referred to specialist for further evaluation.
+P0098,Mrinal Basu,56,Female,Heart Failure,Furosemide 40mg,BNP,1033.8,pg/mL,2024-07-07,2024-09-05,177,Yes,140,77,65,97,Patient missed doses in last week.
+P0099,Paramita Chatterjee,70,Male,"Type 2 Diabetes, Hypertension","Metformin 500mg, Amlodipine 5mg",HbA1c,9.8,%,2024-01-26,2024-03-26,340,Yes,121,101,71,91,Awaiting specialist report.
+P0100,Subhash Mondal,41,Male,"COPD, Heart Failure","Tiotropium 18mcg, Furosemide 40mg",FEV1%,54.8,%,2024-03-16,2024-04-15,290,No,123,73,92,94,Requires follow-up on lab results.

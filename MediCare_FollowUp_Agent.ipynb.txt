@@ -1,0 +1,277 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "61be79ad",
+   "metadata": {},
+   "source": [
+    "# MediCare Patient Follow-Up Agent\n",
+    "**Goal:** an LLM agent that reviews patient records, flags clinical risk and produces follow-up actions for the care team.\n",
+    "\n",
+    "**How it works:** the LLM decides *which tools to call and what the risk is*. Python only fetches facts (patient records, reference ranges) and stores the plans. No risk rules are hardcoded.\n",
+    "\n",
+    "**Setup:** `pip install anthropic pandas matplotlib`. Put `patient_data.csv` next to this notebook. The API key is read from the `ANTHROPIC_API_KEY` env variable, or entered securely (masked) below."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b4c915be",
+   "metadata": {},
+   "source": [
+    "## Task 1 - Data Loading & Exploratory Analysis"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "091bcf84",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import os, json, getpass\n",
+    "import pandas as pd\n",
+    "import matplotlib.pyplot as plt\n",
+    "from anthropic import Anthropic\n",
+    "\n",
+    "if \"ANTHROPIC_API_KEY\" not in os.environ:\n",
+    "    os.environ[\"ANTHROPIC_API_KEY\"] = getpass.getpass(\"Anthropic API key: \")  # masked input\n",
+    "client = Anthropic()\n",
+    "MODEL = os.environ.get(\"MODEL\", \"claude-sonnet-5\")\n",
+    "\n",
+    "df = pd.read_csv(\"patient_data.csv\", parse_dates=[\"last_visit_date\", \"next_scheduled_visit\"])\n",
+    "print(\"Shape:\", df.shape, \"| missing values:\", df.isna().sum().sum())\n",
+    "# days_since_last_visit was computed against a fixed date, so we recover it (needed to judge \"overdue\")\n",
+    "AS_OF = (df.last_visit_date + pd.to_timedelta(df.days_since_last_visit, unit=\"D\")).iloc[0]\n",
+    "print(\"Data snapshot date:\", AS_OF.date())\n",
+    "df.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "1b6e88c4",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "conditions = df.diagnosis.str.split(\", \").explode().replace({\"CKD\": \"Chronic Kidney Disease\"})  # CKD is spelled two ways\n",
+    "print(conditions.value_counts().to_string(), \"\\n\")\n",
+    "print(\"Missed last appointment:\\n\", df.missed_last_appointment.value_counts().to_string(), \"\\n\")\n",
+    "print(df.groupby(\"lab_test\").lab_value.agg([\"count\", \"min\", \"mean\", \"max\"]).round(1))\n",
+    "\n",
+    "fig, ax = plt.subplots(1, 3, figsize=(16, 4))\n",
+    "conditions.value_counts().plot.barh(ax=ax[0], title=\"Patients per condition\")\n",
+    "df.boxplot(\"days_since_last_visit\", by=\"missed_last_appointment\", ax=ax[1])\n",
+    "ax[1].set_title(\"Days since last visit vs missed appointment\")\n",
+    "df.boxplot(\"vitals_spo2\", by=\"missed_last_appointment\", ax=ax[2])\n",
+    "ax[2].set_title(\"SpO2 vs missed appointment\")\n",
+    "plt.suptitle(\"\"); plt.tight_layout(); plt.show()\n",
+    "print(\"Patients whose next visit date is already past the snapshot date:\", (df.next_scheduled_visit < AS_OF).sum())"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "271400c0",
+   "metadata": {},
+   "source": [
+    "**Observations**\n",
+    "- 100 patients, no missing values; 15 missed their last appointment. Many patients have compound diagnoses (e.g. *Type 2 Diabetes, CKD*), so diagnoses are split before counting. \"CKD\" and \"Chronic Kidney Disease\" are the same condition and are merged.\n",
+    "- Each patient has only **one** lab test, and it does not always match the diagnosis. The agent must therefore read labs *together with* vitals and notes.\n",
+    "- 97 of 100 patients have a next scheduled visit that is already in the past relative to the snapshot date (overdue), which is a risk signal by itself.\n",
+    "- The free-text `notes` (e.g. \"dizziness and fatigue\", \"missed doses\") carry clinical signal, which is where an LLM adds value."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "05b6c395",
+   "metadata": {},
+   "source": [
+    "## Task 2 - Define Agent Tools\n",
+    "Tools return **facts only**. The LLM makes every judgement."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "59d72e07",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Standard reference ranges given to the LLM as DATA (the LLM interprets the patient's value against them)\n",
+    "LAB_REF = {\n",
+    " \"HbA1c\": \"Diabetes control: <7% good, 7-9% fair, >9% poor\",\n",
+    " \"BNP\": \"Heart failure: <100 pg/mL normal, 100-400 mild, 400-900 elevated, >900 severe\",\n",
+    " \"BP Systolic\": \"<130 normal, 130-139 stage 1 HTN, 140-179 stage 2 HTN, >=180 hypertensive crisis (mmHg)\",\n",
+    " \"FEV1%\": \"COPD (% predicted): >=80 mild, 50-79 moderate, 30-49 severe, <30 very severe\",\n",
+    " \"Hemoglobin\": \"g/dL: normal >=12 (F) / >=13.5 (M); <10 moderate anaemia; <8 severe\",\n",
+    " \"eGFR\": \"CKD (mL/min/1.73m2): >=90 normal, 60-89 mild, 30-59 moderate, 15-29 severe, <15 kidney failure\",\n",
+    " \"TSH\": \"mIU/L: 0.4-4.0 normal, >4 hypothyroid / under-treated\",\n",
+    " \"PHQ-9 Score\": \"Depression (0-27): <5 minimal, 5-9 mild, 10-14 moderate, 15-19 mod-severe, >=20 severe\",\n",
+    " \"Pain Score\": \"/10: 1-3 mild, 4-6 moderate, 7-10 severe\",\n",
+    " \"Peak Flow\": \"Asthma (L/min): typical adult 400-600; <50% of personal best is danger zone\",\n",
+    " \"VITALS\": \"SpO2 <92% concerning (<90% urgent); resting HR 60-100 bpm\",\n",
+    "}\n",
+    "PLANS = {}  # action plans saved by the agent\n",
+    "\n",
+    "def search_patients(missed_only=False, min_days_since_visit=0, diagnosis_contains=\"\"):\n",
+    "    d = df[(df.days_since_last_visit >= min_days_since_visit) & df.diagnosis.str.contains(diagnosis_contains, case=False)]\n",
+    "    if missed_only: d = d[d.missed_last_appointment == \"Yes\"]\n",
+    "    return d[[\"patient_id\", \"patient_name\", \"diagnosis\", \"days_since_last_visit\", \"missed_last_appointment\"]].to_dict(\"records\")\n",
+    "\n",
+    "def get_patient(patient_id):\n",
+    "    r = df[df.patient_id == patient_id]\n",
+    "    if r.empty: return {\"error\": f\"{patient_id} not found\"}\n",
+    "    rec = r.iloc[0].to_dict()\n",
+    "    rec[\"next_visit_overdue_days\"] = max(0, (AS_OF - rec[\"next_scheduled_visit\"]).days)\n",
+    "    return {k: (str(v.date()) if isinstance(v, pd.Timestamp) else v) for k, v in rec.items()}\n",
+    "\n",
+    "def get_lab_reference(lab_test):\n",
+    "    return {\"lab_test\": lab_test, \"reference\": LAB_REF.get(lab_test, \"n/a\"), \"vitals_reference\": LAB_REF[\"VITALS\"]}\n",
+    "\n",
+    "def save_action_plan(patient_id, risk_level, priority_rank, reasons, actions, outreach_message, needs_clinician_review):\n",
+    "    PLANS[patient_id] = dict(risk_level=risk_level, priority_rank=priority_rank, reasons=reasons, actions=actions,\n",
+    "                             outreach_message=outreach_message, needs_clinician_review=needs_clinician_review)\n",
+    "    return {\"status\": \"saved\", \"patient_id\": patient_id}\n",
+    "\n",
+    "FUNCS = dict(search_patients=search_patients, get_patient=get_patient, get_lab_reference=get_lab_reference, save_action_plan=save_action_plan)\n",
+    "\n",
+    "S, I, B = {\"type\": \"string\"}, {\"type\": \"integer\"}, {\"type\": \"boolean\"}\n",
+    "tool = lambda n, d, p, req=(): {\"name\": n, \"description\": d, \"input_schema\": {\"type\": \"object\", \"properties\": p, \"required\": list(req)}}\n",
+    "TOOLS = [\n",
+    " tool(\"search_patients\", \"List patients (id, name, diagnosis, days since visit, missed flag). Filter by missed appointments, days since last visit, or diagnosis text.\",\n",
+    "      {\"missed_only\": B, \"min_days_since_visit\": I, \"diagnosis_contains\": S}),\n",
+    " tool(\"get_patient\", \"Get the full clinical record of one patient: labs, vitals, medication, notes, visit dates, overdue days.\", {\"patient_id\": S}, [\"patient_id\"]),\n",
+    " tool(\"get_lab_reference\", \"Get reference ranges for a lab test (and vitals) to interpret a patient's values.\", {\"lab_test\": S}, [\"lab_test\"]),\n",
+    " tool(\"save_action_plan\", \"Save the final follow-up plan for one patient. priority_rank 1 = most urgent.\",\n",
+    "      {\"patient_id\": S, \"risk_level\": {\"type\": \"string\", \"enum\": [\"Critical\", \"High\", \"Medium\", \"Low\"]}, \"priority_rank\": I,\n",
+    "       \"reasons\": S, \"actions\": {\"type\": \"array\", \"items\": S}, \"outreach_message\": S, \"needs_clinician_review\": B},\n",
+    "      [\"patient_id\", \"risk_level\", \"priority_rank\", \"reasons\", \"actions\", \"outreach_message\", \"needs_clinician_review\"]),\n",
+    "]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "40757b2a",
+   "metadata": {},
+   "source": [
+    "## Task 3 - Implement the Agentic Loop\n",
+    "Send the task and tools to the LLM. If it asks for tools, run them and return the results. Repeat until it gives a final answer (with a max-iteration safety cap)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "768b3ffd",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "SYSTEM = \"\"\"You are a clinical follow-up assistant for MediCare Clinic's care coordination team.\n",
+    "Use the tools to gather facts; never guess patient data. Judge risk yourself by combining the lab value (vs its reference range),\n",
+    "vitals, diagnosis, medication, free-text notes, missed appointment and overdue follow-up. Weigh clinical severity above mere non-attendance.\n",
+    "You SUPPORT clinicians, you do not diagnose: flag anything serious for clinician review. Be concise.\"\"\"\n",
+    "\n",
+    "def run_agent(task, max_iterations=30, verbose=True):\n",
+    "    messages = [{\"role\": \"user\", \"content\": task}]\n",
+    "    for i in range(1, max_iterations + 1):\n",
+    "        resp = client.messages.create(model=MODEL, max_tokens=4096, system=SYSTEM, tools=TOOLS, messages=messages)\n",
+    "        messages.append({\"role\": \"assistant\", \"content\": resp.content})\n",
+    "        calls = [b for b in resp.content if b.type == \"tool_use\"]\n",
+    "        if not calls:  # no more tool requests -> final answer\n",
+    "            return \"\".join(b.text for b in resp.content if b.type == \"text\")\n",
+    "        results = []\n",
+    "        for c in calls:\n",
+    "            try: out = FUNCS[c.name](**c.input)\n",
+    "            except Exception as e: out = {\"error\": str(e)}  # let the LLM see and recover from errors\n",
+    "            if verbose: print(f\"[step {i}] {c.name}({json.dumps(c.input)[:90]}) -> {str(out)[:80]}\")\n",
+    "            results.append({\"type\": \"tool_result\", \"tool_use_id\": c.id, \"content\": json.dumps(out, default=str)})\n",
+    "        messages.append({\"role\": \"user\", \"content\": results})\n",
+    "    return \"Stopped: max iterations reached.\""
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5480cc82",
+   "metadata": {},
+   "source": [
+    "## Task 4 - Single Patient Analysis"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "0e918a07",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "PID = \"P0008\"  # Heart Failure, BNP 1100, dizziness, SpO2 92 - change to any patient_id\n",
+    "answer = run_agent(f\"\"\"Analyse patient {PID}. Fetch the record and the lab reference, then reply with ONLY a JSON object:\n",
+    "{{\"patient_id\":..., \"risk_level\":\"Critical|High|Medium|Low\", \"reasons\":[...], \"recommended_actions\":[...], \"urgency\":\"e.g. within 24h / 1 week\", \"needs_clinician_review\": true/false}}\"\"\")\n",
+    "print(\"\\nFINAL ANSWER:\")\n",
+    "try: print(json.dumps(json.loads(answer.strip().strip(\"`\").removeprefix(\"json\").strip()), indent=2))\n",
+    "except Exception: print(answer)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "845161c0",
+   "metadata": {},
+   "source": [
+    "## Task 5 - Missed Appointment Follow-Up\n",
+    "The agent finds every patient who missed an appointment, reviews each one, **ranks them by clinical risk** (not just by who missed), and saves a plan with an outreach message."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5a9acf2d",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "PLANS.clear()\n",
+    "summary = run_agent(\"\"\"Find all patients who missed their last appointment. Review EACH one (record + lab reference).\n",
+    "Then rank them from most to least urgent by overall clinical risk and call save_action_plan for every one of them\n",
+    "(priority_rank 1 = most urgent; include a short, friendly outreach message to the patient).\n",
+    "Finish with a 3-line summary for the care manager.\"\"\", max_iterations=40)\n",
+    "print(\"\\n\" + summary)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e48fe3fc",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "plans = pd.DataFrame.from_dict(PLANS, orient=\"index\").rename_axis(\"patient_id\").reset_index().sort_values(\"priority_rank\")\n",
+    "plans = plans.merge(df[[\"patient_id\", \"patient_name\", \"diagnosis\"]], on=\"patient_id\")\n",
+    "pd.set_option(\"display.max_colwidth\", 200)\n",
+    "plans[[\"priority_rank\", \"patient_id\", \"patient_name\", \"diagnosis\", \"risk_level\", \"reasons\", \"needs_clinician_review\"]]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "7dd5cc3c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "for _, p in plans.iterrows():  # actions and outreach message per patient, in priority order\n",
+    "    print(f\"#{p.priority_rank} {p.patient_id} {p.patient_name} [{p.risk_level}]\\n  Actions: {'; '.join(p.actions)}\\n  Message: {p.outreach_message}\\n\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "0c687966",
+   "metadata": {},
+   "source": [
+    "## Design notes\n",
+    "- **LLM decides, code fetches:** risk level, ranking, actions and messages all come from the LLM. Python only returns data and stores results.\n",
+    "- **Safety:** the system prompt frames the agent as decision support and each plan carries a `needs_clinician_review` flag.\n",
+    "- **Efficiency:** the agent pulls only the missed-appointment cohort instead of calling the LLM for all 100 patients.\n",
+    "- **Limitations / next steps:** one lab per patient limits the picture; no trend data. Next: run across all 100 patients in batches, add lab history, and log agent traces for audit."
+   ]
+  }
+ ],
+ "metadata": {},
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
